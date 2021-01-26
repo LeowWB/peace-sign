@@ -1,3 +1,16 @@
+/*************************************
+* Lab 1 Exercise 4
+* Name     : Leow Wen Bin
+* Matric No: A0184415E
+* Lab Group: B13
+*************************************/
+/*************************************
+* Lab 1 Exercise 4
+* Name     : Daryl Tan
+* Matric No: A0132812R
+* Lab Group: B17
+*************************************/
+
 #include <stdlib.h>
 #include <stdio.h>
 
