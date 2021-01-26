@@ -33,7 +33,6 @@ int main() {
     //Make sure the ouput matches with the sample given
     node *myList = NULL;    //Empty List
     int input;
-    printf("My List:\n");
 
     while (scanf("%i", &input) == 1) {
         myList = addToHead(myList, input);
