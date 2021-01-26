@@ -11,6 +11,14 @@
 * Lab Group: B13
 *************************************/
 
+
+/*
+    ASSUMPTIONS:
+
+    once the spell has been cast, we are free to use loops as we want. i.e. we can use loops within 
+    the spells.
+*/
+
 #include <stdio.h>
 
 //Datatype Declarations
