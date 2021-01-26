@@ -5,7 +5,7 @@ import subprocess
 wd = os.getcwd()
 ex_dir = sys.argv[1]
 os.chdir(ex_dir)
-os.system('gcc *.c')
+os.system('gcc *.c -std=c99')
 
 for test_input in filter(lambda x: x[-3:] == '.in', os.listdir()):
     print(test_input + '======================')
