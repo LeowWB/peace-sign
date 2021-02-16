@@ -156,7 +156,9 @@ int main() {
 			printf("%s\n", path);
 		} else if (strcmp(cmdLineArgs[0], "wait") == 0) {
 			int pid = atoi(cmdLineArgs[1]);
+			foregroundPid = pid;
 			waitpid(pid, &result, 0);
+			foregroundPid = -1;
 
 			// remove from unwaited
 			int found = 0;
@@ -212,6 +214,7 @@ int main() {
 				} else {
 					foregroundPid = childId;
 					waitpid(childId, &result, 0);
+					foregroundPid = -1;
 				}
 			}
 		}
