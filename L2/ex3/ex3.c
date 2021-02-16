@@ -97,7 +97,6 @@ void killHandler(int signo) {
     
     if (foregroundPid > 0) {
         kill(foregroundPid, SIGINT);
-        printf("okay, killed\n");
         foregroundPid = -1;
     } else {
         printf("Nothing to kill.\n");
@@ -179,23 +178,23 @@ int main() {
             struct stat fileStat;
             if (stat(command, &fileStat)) {
                 printf("%s not found\n", command);
-            }
-
-            char *lastArg = cmdLineArgs[tokenNum - 1];
-            int isBackground = strcmp(lastArg, "&") == 0;
-            if (isBackground) {
-                // replace & with NULL
-                cmdLineArgs[tokenNum - 1] = NULL;
-            }
-            int childId = fork();
-            if (childId == 0) {
-                execv(command, cmdLineArgs);
-            } else if (isBackground) {
-                unwaitedIds[numUnwaited] = childId;
-                numUnwaited++;
             } else {
-                foregroundPid = childId;
-                waitpid(childId, &result, 0);
+                char *lastArg = cmdLineArgs[tokenNum - 1];
+                int isBackground = strcmp(lastArg, "&") == 0;
+                if (isBackground) {
+                    // replace & with NULL
+                    cmdLineArgs[tokenNum - 1] = NULL;
+                }
+                int childId = fork();
+                if (childId == 0) {
+                    execv(command, cmdLineArgs);
+                } else if (isBackground) {
+                    unwaitedIds[numUnwaited] = childId;
+                    numUnwaited++;
+                } else {
+                    foregroundPid = childId;
+                    waitpid(childId, &result, 0);
+                }
             }
         }
 
