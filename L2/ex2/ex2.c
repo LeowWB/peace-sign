@@ -4,14 +4,11 @@
 * Student Id: A????????
 * Lab Group: B??
 *************************************
-Note: Duplicate the above and fill in 
-for the 2nd member if  you are on a team
-Note2: Exercise 3 is a superset of exercise 2
-Please copy over your code to ex3.c and continue
-Submit ONLY ex3.c (even if you cannot finish ex3)
---------------------------------------
-Warning: Make sure your code works on
-compute cluster node (Linux on x86)
+*************************************
+* Lab 2 Exercise 2
+* Name: Leow Wen Bin
+* Student Id: A0184415E
+* Lab Group: B13
 *************************************/
 
 #include <stdio.h>

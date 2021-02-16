@@ -4,11 +4,11 @@
 * Student Id: A0132821R
 * Lab Group: B17
 *************************************
-Note: Duplicate the above and fill in 
-for the 2nd member if  you are on a team
---------------------------------------
-Warning: Make sure your code works on
-compute cluster node (Linux on x86)
+*************************************
+* Lab 2 Exercise 1
+* Name: Leow Wen Bin
+* Student Id: A0184415E
+* Lab Group: B13
 *************************************/
 
 #include <stdio.h>
