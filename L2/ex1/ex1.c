@@ -26,12 +26,12 @@ int main()
     scanf("%d", &nChild);
 
     //Spawn child processes
-    int childIds[nChild + 1];
-    for (int i = 1; i <= nChild; i++) {
+    int childIds[nChild];
+    for (int i = 0; i < nChild; i++) {
         int result = fork();
         if (result == 0) {
             sleep(rand() % 10);
-            printf("Child %d[%d]: Hello!\n", i, getpid());
+            printf("Child %d[%d]: Hello!\n", i+1, getpid());
             return 0;
         } else {
             childIds[i] = result;
@@ -39,11 +39,11 @@ int main()
     }
     //Wait on child processes in order
 
-    for (int i = 1; i <= nChild; i++) {
+    for (int i = 0; i < nChild; i++) {
         int status;
         waitpid(childIds[i], &status, 0);
 
-        printf("Parent: Child %d[%d] done\n", i, childIds[i]);
+        printf("Parent: Child %d[%d] done\n", i+1, childIds[i]);
     }
     return 0;
 }
