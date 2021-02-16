@@ -208,6 +208,7 @@ int main() {
 				} else if (isBackground) {
 					unwaitedIds[numUnwaited] = childId;
 					numUnwaited++;
+					printf("Child %d in background\n", childId);
 				} else {
 					foregroundPid = childId;
 					waitpid(childId, &result, 0);
