@@ -19,10 +19,13 @@
 #include <unistd.h>     //for fork(), wait()
 #include <string.h>     //for string comparison etc
 #include <stdlib.h>     //for malloc()
+#include <signal.h>
 
 #define MAX_UNWAITED 10
 #define MAX_PATH_LENGTH 20
 #define MAX_COMMAND_LENGTH 20
+
+int foregroundPid = -1;
 
 char **split(char *input, char *delimiter, int maxTokenNum, int *readTokenNum)
 //Assumptions:
@@ -87,6 +90,19 @@ void freeTokenArray(char **strArr, int size) {
     //      afterwards
 }
 
+void killHandler(int signo) {
+    if (signo != SIGINT) {
+        return;
+    }
+    
+    if (foregroundPid > 0) {
+        kill(foregroundPid, SIGINT);
+        printf("okay, killed\n");
+        foregroundPid = -1;
+    } else {
+        printf("Nothing to kill.\n");
+    }
+}
 
 int main() {
     char **cmdLineArgs;
@@ -98,6 +114,9 @@ int main() {
     int unwaitedIds[MAX_UNWAITED];
     int numUnwaited = 0;
 
+    if (signal(SIGINT, killHandler) == SIG_ERR) {
+        printf("Failed to register handler\n");
+    }
 
     //read user input
     printf("YWIMC > ");
@@ -175,6 +194,7 @@ int main() {
                 unwaitedIds[numUnwaited] = childId;
                 numUnwaited++;
             } else {
+                foregroundPid = childId;
                 waitpid(childId, &result, 0);
             }
         }
