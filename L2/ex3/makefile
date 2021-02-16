@@ -1,4 +1,4 @@
-all:	infinite alarmClock clock showCmdArg stringTokenizer return
+all:	infinite alarmClock clock showCmdArg stringTokenizer return undead easyTarget
 
 infinite: infinite.c
 	gcc -Wall -o infinite infinite.c
@@ -18,6 +18,11 @@ stringTokenizer:	stringTokenizer.c
 return:	return.c
 	gcc -Wall -o return return.c
 
+undead:	undead.c
+	gcc -Wall -o undead undead.c
+easyTarget:	easyTarget.c
+	gcc -Wall -o easyTarget easyTarget.c
+
 clean:
-	rm -f infinite alarmClock clock showCmdArg stringTokenizer return
+	rm -f infinite alarmClock clock showCmdArg stringTokenizer return undead easyTarget
 
