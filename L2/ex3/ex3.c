@@ -206,6 +206,7 @@ int main() {
 				}
 				int childId = fork();
 				if (childId == 0) {
+					signal(SIGINT, SIG_IGN);
 					execv(command, cmdLineArgs);
 				} else if (isBackground) {
 					unwaitedIds[numUnwaited] = childId;
