@@ -23,6 +23,8 @@ Copy over the solution and modify as needed.
 
 //TODO: You can modify the structure
 typedef struct {
+    pthread_mutex_t canWrite;
+    pthread_mutex_t canAccess;
   pthread_mutex_t mutex;
   int reader_count;
   int writer_count;

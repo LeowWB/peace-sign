@@ -17,7 +17,6 @@ for the 2nd member if  you are on a team
 typedef struct {
   pthread_mutex_t canWrite;
   pthread_mutex_t canAccess;
-  pthread_mutex_t mutex;
   int reader_count;
   int writer_count;
 } rw_lock;
