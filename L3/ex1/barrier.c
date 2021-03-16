@@ -40,4 +40,6 @@ void barrier_destroy ( barrier_t *barrier )
 {
     sem_destroy(barrier->mutex);
     sem_destroy(barrier->allReached);
+    free(barrier->mutex);
+    free(barrier->allReached);
 }
