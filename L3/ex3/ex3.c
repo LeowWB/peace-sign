@@ -20,9 +20,6 @@ for the 2nd member if  you are on a team
 
 void initialise(rw_lock* lock)
 {
-    lock->canAccess = *(pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
-    lock->canWrite = *(pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
-    lock->mutex = *(pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
     pthread_mutex_init(&(lock->canAccess), NULL);
     pthread_mutex_init(&(lock->canWrite), NULL);
     pthread_mutex_init(&(lock->mutex), NULL);
