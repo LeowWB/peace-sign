@@ -9,7 +9,7 @@
 * Name: Leow Wen Bin
 * Student Id: A0184415E
 * Lab Group: B13
-*************************************
+*************************************/
 
 #ifndef __CS2106_RWLOCKV1_H_
 #define __CS2106_RWLOCKV1_H_
