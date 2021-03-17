@@ -1,19 +1,3 @@
-/*************************************
-* Lab 3 Exercise 1
-* Name: Daryl Tan
-* Student Id: A0132821R
-* Lab Group: B17
-*************************************
-/*************************************
-* Lab 3 Exercise 1
-* Name: Leow Wen Bin
-* Student Id: A0184415E
-* Lab Group: B13
-*************************************
-Note: Duplicate the above and fill in 
-for the 2nd member if  you are on a team
-*/
-
 /**
  * CS2106 AY 20/21 Semester 2 - Lab 3
  *
@@ -56,4 +40,6 @@ void barrier_destroy ( barrier_t *barrier )
 {
     sem_destroy(barrier->mutex);
     sem_destroy(barrier->allReached);
+    free(barrier->mutex);
+    free(barrier->allReached);
 }
