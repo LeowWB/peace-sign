@@ -30,7 +30,6 @@ sem_t ensure_free_space_sem;
 
 void initialise()
 {
-    //TODO: Your code here
     segment_sems = malloc(sizeof (sem_t) * num_of_segments);
     for (int i = 0; i < num_of_segments; i++) {
     	sem_init(&segment_sems[i], 0, 1);
@@ -40,7 +39,6 @@ void initialise()
 
 void cleanup()
 {
-    //TODO: Your code here
     for (int i = 0; i < num_of_segments; i++) {
 	sem_destroy(&segment_sems[i]);
     }
@@ -50,7 +48,6 @@ void cleanup()
 
 void* car(void* car)
 {
-    //TODO: Your code here, see the general steps below
 
     //This function modeles a thread 
     //A car: 
