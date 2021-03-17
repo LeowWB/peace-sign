@@ -1,19 +1,15 @@
 /*************************************
-* Lab 3 Exercise 3
-* Name:
-* Student Id: A????????
-* Lab Group: B??
+* Lab 3 Exercise 1
+* Name: Daryl Tan
+* Student Id: A0132821R
+* Lab Group: B17
 *************************************
-Note: Duplicate the above and fill in 
-for the 2nd member if  you are on a team
-*/
-
-/************************************
-
-You should use ex2 solution as the starting point.
-
-Copy over the solution and modify as needed.
-************************************/
+/*************************************
+* Lab 3 Exercise 1
+* Name: Leow Wen Bin
+* Student Id: A0184415E
+* Lab Group: B13
+*************************************
 
 
 #ifndef __CS2106_RWLOCKV2_H_
