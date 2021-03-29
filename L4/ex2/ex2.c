@@ -1,9 +1,9 @@
 /*************************************
-* Lab 4 Exercise 2
-* Name:
-* Student Id: A????????
-* Lab Group: B??
-*************************************
+ * Lab 4 Exercise 2
+ * Name:
+ * Student Id: A????????
+ * Lab Group: B??
+ *************************************
 Note: Duplicate the above and fill in 
 for the 2nd member if  you are on a team
 */
@@ -21,31 +21,31 @@ for the 2nd member if  you are on a team
 static heapMetaInfo hmi;
 
 partInfo* buildPartitionInfo(unsigned int offset, int size)
-/**********************************************************
- * Allocate a new partInfo structure and initialize the fields
- *********************************************************/
+	/**********************************************************
+	 * Allocate a new partInfo structure and initialize the fields
+	 *********************************************************/
 {
-    partInfo *piPtr;
+	partInfo *piPtr;
 
-    piPtr = (partInfo*) malloc(sizeof(partInfo));
+	piPtr = (partInfo*) malloc(sizeof(partInfo));
 
-    piPtr->offset = offset;
+	piPtr->offset = offset;
 	piPtr->size = size;
 	piPtr->nextPart = NULL;
 	piPtr->status = FREE;
 
-    return piPtr;
+	return piPtr;
 }
 
 void printPartitionList(partInfo* piPtr)
-/**********************************************************
- * Print a partition linked list
- *********************************************************/
+	/**********************************************************
+	 * Print a partition linked list
+	 *********************************************************/
 {
 	partInfo* current;
-	
+
 	for ( current = piPtr; current != NULL; 
-		current = current->nextPart){
+			current = current->nextPart){
 
 		printf("[+%5d | %5d bytes | %d]\n", 
 				current->offset, current->size, current->status);
@@ -53,9 +53,9 @@ void printPartitionList(partInfo* piPtr)
 }
 
 void printHeapMetaInfo()
-/**********************************************************
- * Print Heap Internal Bookkeeping Information
- *********************************************************/
+	/**********************************************************
+	 * Print Heap Internal Bookkeeping Information
+	 *********************************************************/
 {
 	printf("\nHeap Meta Info:\n");
 	printf("===============\n");
@@ -69,55 +69,75 @@ void printHeapMetaInfo()
 }
 
 void printHeap()
-/**********************************************************
- * Print the content of the entire Heap 
- *********************************************************/
+	/**********************************************************
+	 * Print the content of the entire Heap 
+	 *********************************************************/
 {
-    //Included as last debugging mechanism.
-    //Print the entire heap regions as integer values.
+	//Included as last debugging mechanism.
+	//Print the entire heap regions as integer values.
 
-    int* array;
-    int size, i;
-    
-    size = hmi.totalSize / sizeof(int);
-    array = (int*)hmi.base;
+	int* array;
+	int size, i;
 
-    for ( i = 0; i < size; i++){
-        if (i % 4 == 0){
-            printf("[+%5d] |", i);
-        }
-        printf("%8d",array[i]);
-        if ((i+1) % 4 == 0){
-            printf("\n");
-        }
-    }
+	size = hmi.totalSize / sizeof(int);
+	array = (int*)hmi.base;
+
+	for ( i = 0; i < size; i++){
+		if (i % 4 == 0){
+			printf("[+%5d] |", i);
+		}
+		printf("%8d",array[i]);
+		if ((i+1) % 4 == 0){
+			printf("\n");
+		}
+	}
 }
 
 
 void printHeapStatistic()
-/**********************************************************
- * Print Heap Usage Statistics
- *********************************************************/
+	/**********************************************************
+	 * Print Heap Usage Statistics
+	 *********************************************************/
 {
-    //TODO: Copy over your completed function from ex1 here
+	//TODO: Copy over your completed function from ex1 here
 
 
-    printf("\nHeap Usage Statistics:\n");
-    printf("======================\n");
+	printf("\nHeap Usage Statistics:\n");
+	printf("======================\n");
 
-    printf("Total Space: %d bytes\n", hmi.totalSize);
+	printf("Total Space: %d bytes\n", hmi.totalSize);
 
-    printf("Total Occupied Partitions: %d\n", 0);
-    printf("\tTotal Occupied Size: %d bytes\n", 0);
+	partInfo* current;
+	int occupiedPartitions = 0;
+	int holes = 0;
+	int occupiedSize = 0;
+	int holeSize = 0;
+	for ( current = hmi.pListHead; current != NULL;
+			current = current->nextPart){
+		if (current->status) {
+			occupiedPartitions++;
+			occupiedSize += current->size;
+		} else {
+			holes++;
+			holeSize += current->size;
+		}
 
-    printf("Total Number of Holes: %d\n", 0);
-    printf("\tTotal Hole Size: %d bytes\n", 0);
+		printf("[+%5d | %5d bytes | %d]\n",
+				current->offset, current->size, current->status);
+	}
+
+
+	printf("Total Occupied Partitions: %d\n", occupiedPartitions);
+	printf("\tTotal Occupied Size: %d bytes\n", occupiedSize);
+
+	printf("Total Number of Holes: %d\n", holes);
+	printf("\tTotal Hole Size: %d bytes\n", holeSize);
 }
 
 int setupHeap(int initialSize)
-/**********************************************************
- * Setup a heap with "initialSize" bytes
- *********************************************************/
+	/**********************************************************
+	 * Setup a heap with "initialSize" bytes
+	 *********************************************************/
 {
 	void* base;
 
@@ -128,22 +148,22 @@ int setupHeap(int initialSize)
 	}
 
 	hmi.totalSize = initialSize;
-    hmi.base = base;
-	
-    //Setup the very first partition info structure
+	hmi.base = base;
+
+	//Setup the very first partition info structure
 	hmi.pListHead = buildPartitionInfo( 0, initialSize );
-	
+
 	return 1;
 }
 
 
 
 void splitPart(partInfo *bigPart, int newSize)
-/**********************************************************
- * Split a partition "bigPart" into two partitions:
- *    one with newSize bytes, 
- *    the other with (original_size - newSize) bytes
- *********************************************************/
+	/**********************************************************
+	 * Split a partition "bigPart" into two partitions:
+	 *    one with newSize bytes, 
+	 *    the other with (original_size - newSize) bytes
+	 *********************************************************/
 {
 	partInfo *holeAt;
 	int holeSize;
@@ -155,47 +175,51 @@ void splitPart(partInfo *bigPart, int newSize)
 	//Make a new partition for the hole
 	holeAt = buildPartitionInfo(bigPart->offset+newSize, holeSize);
 
-    //Linked list insertion
+	//Linked list insertion
 	holeAt->nextPart = bigPart->nextPart;
 	bigPart->nextPart = holeAt;
 
-    bigPart->size = newSize;
+	bigPart->size = newSize;
 
 }
 
 void* mymalloc(int size)
-/**********************************************************
- * Mimic the normal "malloc()":
- *    Attempt to allocate a piece of free heap of (size) bytes
- *    Return the memory addres of this free memory if successful
- *    Return NULL otherwise 
- *********************************************************/
+	/**********************************************************
+	 * Mimic the normal "malloc()":
+	 *    Attempt to allocate a piece of free heap of (size) bytes
+	 *    Return the memory addres of this free memory if successful
+	 *    Return NULL otherwise 
+	 *********************************************************/
 {
-    //TODO: Modify the allocation algoritm from First-Fit to
-    //       Best-Fit
+	//TODO: Modify the allocation algoritm from First-Fit to
+	//       Best-Fit
 
 	partInfo *current = hmi.pListHead;
+	partInfo *best = NULL;
+	//We need to make sure the size is word
+	// aligned, i.e. if the word size is 4 bytes, the size need to be
+	// rounded to nearest multiples of 4. Otherwise, user can get "bus
+	// error" when accessing non-aligned memory locations
 
-    //We need to make sure the size is word
-    // aligned, i.e. if the word size is 4 bytes, the size need to be
-    // rounded to nearest multiples of 4. Otherwise, user can get "bus
-    // error" when accessing non-aligned memory locations
+	// Use simple arithmetic to achieve this purpose:
+	//  - Divide by 4 then multiply by 4 gives rounded multiples of 4. 
+	//  - Dddition of 4 round up to the next multiple 
+	//  - subtraction take care of the case where size is already multiples of 4. 
+	//This can be achieved via bitwise operation too.
+	size = (size - 1) / 4 * 4 + 4;
 
-    // Use simple arithmetic to achieve this purpose:
-    //  - Divide by 4 then multiply by 4 gives rounded multiples of 4. 
-    //  - Dddition of 4 round up to the next multiple 
-    //  - subtraction take care of the case where size is already multiples of 4. 
-    //This can be achieved via bitwise operation too.
-    size = (size - 1) / 4 * 4 + 4;
- 
-    //First-fit algorithm
-	while ( current != NULL && 
-			(current->status == OCCUPIED || current->size < size) ){
-
+	//First-fit algorithm
+	while ( current != NULL ){
+			
+		if (current->status == FREE && current->size >= size && (best == NULL || current->size <= best->size)) {
+			best = current;
+		} 
 		current = current->nextPart;
 	}
+	printf("%i needed: %i", best->size, size);
+	current = best;
 
-    if (current == NULL){	//heap full
+	if (current == NULL){	//heap full
 		return NULL;
 	}
 
@@ -205,39 +229,39 @@ void* mymalloc(int size)
 	}
 
 	current->status = OCCUPIED;
-	
+
 	return (void*)hmi.base + current->offset;
 }
 
 void myfree(void* address)
-/**********************************************************
- * Mimic the normal "free()":
- *    Attempt to free a previously allocated memory space
- *********************************************************/
+	/**********************************************************
+	 * Mimic the normal "free()":
+	 *    Attempt to free a previously allocated memory space
+	 *********************************************************/
 {
 	partInfo *toBeFreed;
-    int partID;
+	int partID;
 
-    //Use the offset as a unique ID to look for the right partition
- 	partID = address - hmi.base;
-    
-    for( toBeFreed = hmi.pListHead; 
-        toBeFreed && toBeFreed->offset != partID;
-        toBeFreed = toBeFreed->nextPart){
+	//Use the offset as a unique ID to look for the right partition
+	partID = address - hmi.base;
 
-        //Essentially an empty for-loop at the moment
-    
-    }
+	for( toBeFreed = hmi.pListHead; 
+			toBeFreed && toBeFreed->offset != partID;
+			toBeFreed = toBeFreed->nextPart){
 
-    //Should not happen in this lab as we free only correct adddresses
-    if (toBeFreed == NULL) {
-        printf("MyFree(%p) failed! Exiting.\n", address);
-        exit(1);
-    }
+		//Essentially an empty for-loop at the moment
 
-    //Very simple handling, just set the partition to FREE
-    toBeFreed->status = FREE;
+	}
 
-    //If this is a full implementation, what should we do with freed partition?
+	//Should not happen in this lab as we free only correct adddresses
+	if (toBeFreed == NULL) {
+		printf("MyFree(%p) failed! Exiting.\n", address);
+		exit(1);
+	}
+
+	//Very simple handling, just set the partition to FREE
+	toBeFreed->status = FREE;
+
+	//If this is a full implementation, what should we do with freed partition?
 
 }
