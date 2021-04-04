@@ -108,13 +108,16 @@ void printHeapStatistic()
 
 	//Remember to preserve the message format!
 
+
+
+
 	partInfo* current;
 	int occupiedPartitions = 0;
 	int holes = 0;
 	int occupiedSize = 0;
 	int holeSize = 0;
 	for ( current = hmi.pListHead; current != NULL; 
-			current = current->nextPart){
+			current = current->nextPart){ // loop thru all partitions
 		if (current->status) {
 			occupiedPartitions++;
 			occupiedSize += current->size;
@@ -126,6 +129,9 @@ void printHeapStatistic()
 		printf("[+%5d | %5d bytes | %d]\n", 
 				current->offset, current->size, current->status);
 	}
+
+
+
 
 
 	printf("Total Occupied Partitions: %d\n", occupiedPartitions);
