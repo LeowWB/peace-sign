@@ -42,6 +42,13 @@ unsigned int log2Ceiling( unsigned int N )
     return s;
 }
 
+// not sure if allowed to import new libraries
+int min(int a, int b) {
+	if (a < b)
+		return a;
+	else
+		return b;
+}
 
 unsigned int log2Floor( unsigned int N )
 /**********************************************************
@@ -314,7 +321,7 @@ void myfree(void* address, int size)
             } else {
                 prev->nextPart = current->nextPart;
             }
-            return myfree(min(addr, buddyAddr), size*2);            
+            return myfree(min(addr, buddyAddr) + hmi.base, size*2);            
 		} 
         prev = current;
 		current = current->nextPart;
@@ -322,8 +329,8 @@ void myfree(void* address, int size)
 
     // buddy not found, just add the freed partition back.
     partInfo *newPart = buildPartitionInfo(addr);
-	*current = hmi.A[level];
-    *prev = NULL;
+	current = hmi.A[level];
+    prev = NULL;
 	while ( current != NULL ){
 		if (current->offset > addr) {
             if (prev == NULL) {
