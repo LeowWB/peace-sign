@@ -279,4 +279,42 @@ void myfree(void* address, int size)
  *********************************************************/
 {
     //TODO: Task 3. Implement the de allocation using buddy allocator
+    int level = log2Ceiling(size);
+    int buddyAddr = buddyOf(address, level);
+
+    
+	partInfo *current = hmi.A[level];
+    partInfo *prev = NULL;
+	while ( current != NULL ){
+		if (current->offset == buddyAddr) {
+            if (prev == NULL) {
+                hmi.A[level] = current->nextPart;
+            } else {
+                prev->nextPart = current->nextPart;
+            }
+            return myfree(min(address, buddyAddr), size*2);            
+		} 
+        prev = current;
+		current = current->nextPart;
+	}
+
+    // buddy not found, just add the freed partition back.
+    partInfo *newPart = buildPartitionInfo(address);
+	*current = hmi.A[level];
+    *prev = NULL;
+	while ( current != NULL ){
+		if (current->offset > address) {
+            if (prev == NULL) {
+                hmi.A[level] = newPart;
+                newPart->nextPart = current;
+            } else {
+                prev->nextPart = newPart;
+                newPart->nextPart = current;
+            }
+            return;
+		} 
+        prev = current;
+		current = current->nextPart;
+	}
+    prev->nextPart = newPart;
 }
