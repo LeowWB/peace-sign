@@ -279,8 +279,10 @@ void myfree(void* address, int size)
  *********************************************************/
 {
     //TODO: Task 3. Implement the de allocation using buddy allocator
+    int actualSize = size;
     int level = log2Ceiling(size);
     int buddyAddr = buddyOf(address, level);
+    size = powOf2(level);
 
     
 	partInfo *current = hmi.A[level];
