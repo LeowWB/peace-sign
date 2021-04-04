@@ -166,11 +166,28 @@ void printHeapStatistic()
    //Remember to preserve the message format!
 
     printf("Total Space: %d bytes\n", hmi.totalSize);
-    
-    printf("Total Free Partitions: %d\n", 0);
-    printf("Total Free Size: %d bytes\n", 0);
 
-    printf("Total Internal Fragmentation: %d bytes\n", 0);
+
+    int freeParts = 0;
+    int freeSize = 0;
+    int i = 0;
+
+    for (i = 0; i <= hmi.maxIdx; i++) {
+        partInfo *current = hmi.A[i];
+        int countForThisLevel = 0;
+
+        while ( current != NULL ){
+            current = current->nextPart;
+            countForThisLevel += 1;
+        }
+
+        freeParts += countForThisLevel;
+        freeSize += countForThisLevel * powOf2(i);
+    }
+
+    printf("Total Free Partitions: %d\n", freeParts);
+    printf("Total Free Size: %d bytes\n", freeSize);
+    printf("Total Internal Fragmentation: %d bytes\n", hmi.internalFragTotal);
 }
 
 void addPartitionAtLevel( unsigned int lvl, unsigned int offset )
@@ -259,16 +276,18 @@ void* mymalloc(int size)
     
     partInfo *blockToTake = hmi.A[level];
     hmi.A[level] = blockToTake->nextPart;
+    int sizeOfBlock;
 
     while (splitCounts > 0) {
         splitCounts--;
         level--;
-        int sizeOfBlock = powOf2(level);
+        sizeOfBlock = powOf2(level);
         partInfo *blockToPutBack = buildPartitionInfo(blockToTake->offset + sizeOfBlock);
         blockToPutBack->nextPart = blockToTake->nextPart;
         hmi.A[level] = blockToPutBack;
     }
-
+    
+    hmi.internalFragTotal += sizeOfBlock - size;
     return blockToTake->offset;
 }
 
@@ -313,10 +332,12 @@ void myfree(void* address, int size)
                 prev->nextPart = newPart;
                 newPart->nextPart = current;
             }
+            hmi.internalFragTotal -= size - actualSize;
             return;
 		} 
         prev = current;
 		current = current->nextPart;
 	}
     prev->nextPart = newPart;
+    hmi.internalFragTotal -= size - actualSize;
 }
