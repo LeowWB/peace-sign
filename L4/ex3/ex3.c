@@ -288,7 +288,7 @@ void* mymalloc(int size)
     }
     
     hmi.internalFragTotal += sizeOfBlock - size;
-    return blockToTake->offset;
+    return (void*)hmi.base + blockToTake->offset;
 }
 
 void myfree(void* address, int size)
@@ -299,8 +299,9 @@ void myfree(void* address, int size)
 {
     //TODO: Task 3. Implement the de allocation using buddy allocator
     int actualSize = size;
+    int addr = address - hmi.base;
     int level = log2Ceiling(size);
-    int buddyAddr = buddyOf(address, level);
+    int buddyAddr = buddyOf(addr, level);
     size = powOf2(level);
 
     
@@ -313,18 +314,18 @@ void myfree(void* address, int size)
             } else {
                 prev->nextPart = current->nextPart;
             }
-            return myfree(min(address, buddyAddr), size*2);            
+            return myfree(min(addr, buddyAddr), size*2);            
 		} 
         prev = current;
 		current = current->nextPart;
 	}
 
     // buddy not found, just add the freed partition back.
-    partInfo *newPart = buildPartitionInfo(address);
+    partInfo *newPart = buildPartitionInfo(addr);
 	*current = hmi.A[level];
     *prev = NULL;
 	while ( current != NULL ){
-		if (current->offset > address) {
+		if (current->offset > addr) {
             if (prev == NULL) {
                 hmi.A[level] = newPart;
                 newPart->nextPart = current;
