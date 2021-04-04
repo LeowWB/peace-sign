@@ -245,8 +245,31 @@ void* mymalloc(int size)
  *********************************************************/
 {
     //TODO: Task 2. Implement the allocation using buddy allocator
-    return NULL;
+    int level = log2Ceiling(size);
+    int splitCounts = 0;
+    for (; level <= hmi.maxIdx; level++) {
+        if (hmi.A[level] == NULL) {
+            splitCounts++;
+            continue;
+        }
+        break;
+    }
 
+    //level now contains the level from which we'll take a block.
+    
+    partInfo *blockToTake = hmi.A[level];
+    hmi.A[level] = blockToTake->nextPart;
+
+    while (splitCounts > 0) {
+        splitCounts--;
+        level--;
+        int sizeOfBlock = powOf2(level);
+        partInfo *blockToPutBack = buildPartitionInfo(blockToTake->offset + sizeOfBlock);
+        blockToPutBack->nextPart = blockToTake->nextPart;
+        hmi.A[level] = blockToPutBack;
+    }
+
+    return blockToTake->offset;
 }
 
 void myfree(void* address, int size)
