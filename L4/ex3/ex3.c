@@ -304,6 +304,7 @@ void myfree(void* address, int size)
  *    Attempt to free a previously allocated memory space
  *********************************************************/
 {
+	printf("sanity");
     //TODO: Task 3. Implement the de allocation using buddy allocator
     int actualSize = size;
     int addr = address - hmi.base;
@@ -314,13 +315,19 @@ void myfree(void* address, int size)
     
 	partInfo *current = hmi.A[level];
     partInfo *prev = NULL;
+    printf("going to loop");
 	while ( current != NULL ){
+	printf("offset %d",current->offset);
+	printf("buddyaddr is %d",buddyAddr);
 		if (current->offset == buddyAddr) {
-            if (prev == NULL) {
+            printf("buddyaddr");
+	    printf("%d", current->offset);
+			if (prev == NULL) {
                 hmi.A[level] = current->nextPart;
             } else {
                 prev->nextPart = current->nextPart;
             }
+			printf("%d",min(addr,buddyAddr));
             return myfree(min(addr, buddyAddr) + hmi.base, size*2);            
 		} 
         prev = current;
@@ -346,6 +353,9 @@ void myfree(void* address, int size)
         prev = current;
 		current = current->nextPart;
 	}
-    prev->nextPart = newPart;
+    if (prev==NULL)
+	    hmi.A[level] = newPart;
+    else
+	    prev->nextPart = newPart;
     hmi.internalFragTotal -= size - actualSize;
 }
