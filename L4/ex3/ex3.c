@@ -168,8 +168,6 @@ void printHeapStatistic()
     printf("\nHeap Usage Statistics:\n");
     printf("======================\n");
 
-    printf("Total Space: %d bytes\n", hmi.totalSize);
-
    //Remember to preserve the message format!
 
     printf("Total Space: %d bytes\n", hmi.totalSize);
@@ -294,7 +292,7 @@ void* mymalloc(int size)
         hmi.A[level] = blockToPutBack;
     }
     
-    hmi.internalFragTotal += sizeOfBlock - size;
+    hmi.internalFragTotal += powOf2(log2Ceiling(size)) - size;
     return (void*)hmi.base + blockToTake->offset;
 }
 
@@ -357,5 +355,5 @@ void myfree(void* address, int size)
 	    hmi.A[level] = newPart;
     else
 	    prev->nextPart = newPart;
-    hmi.internalFragTotal -= size - actualSize;
+    hmi.internalFragTotal -= powOf2(log2Ceiling(actualSize)) - actualSize;
 }
