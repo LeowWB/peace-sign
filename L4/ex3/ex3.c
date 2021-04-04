@@ -82,12 +82,6 @@ partInfo* buildPartitionInfo(unsigned int offset)
     piPtr->offset = offset;
 	piPtr->nextPart = NULL;
 
-    //Buddy system's partition size is implicit
-	//piPtr->size = size;
-
-    //All available partition in buddy system is implicitly free
-	//piPtr->status = FREE;
-
     return piPtr;
 }
 
@@ -222,12 +216,21 @@ int setupHeap(int initialSize)
 	hmi.totalSize = initialSize;
     hmi.internalFragTotal = 0;
 	
+    hmi.maxIdx = log2Floor(initialSize); // we can assume initial size is power of 2 (given)
+    hmi.A = (partInfo**)malloc(sizeof(partInfo*) * (hmi.maxIdx+1));
+
+    int i;
+
+    for (i = 0; i < hmi.maxIdx; i++) {
+        hmi.A[i] = NULL;
+    }
+
+    hmi.A[hmi.maxIdx] = buildPartitionInfo(0);
+
     //TODO: Task 1. Setup the rest of the bookkeeping info:
     //       hmi.A <= an array of partition linked list
     //       hmi.maxIdx <= the largest index for hmi.A[]
     //       
-    hmi.A = NULL;   //change this!
-    hmi.maxIdx = 0; //change this!
 
     return 1;
 }
