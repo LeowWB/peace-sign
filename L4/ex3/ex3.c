@@ -44,10 +44,10 @@ unsigned int log2Ceiling( unsigned int N )
 
 // not sure if allowed to import new libraries
 int min(int a, int b) {
-	if (a < b)
-		return a;
-	else
-		return b;
+    if (a < b)
+        return a;
+    else
+        return b;
 }
 
 unsigned int log2Floor( unsigned int N )
@@ -87,7 +87,7 @@ partInfo* buildPartitionInfo(unsigned int offset)
     piPtr = (partInfo*) malloc(sizeof(partInfo));
 
     piPtr->offset = offset;
-	piPtr->nextPart = NULL;
+    piPtr->nextPart = NULL;
 
     return piPtr;
 }
@@ -97,20 +97,20 @@ void printPartitionList(partInfo* piPtr)
  * Print a partition linked list
  *********************************************************/
 {
-	partInfo* current;
+    partInfo* current;
     int count = 1;
-	
-	for ( current = piPtr; current != NULL; 
-		current = current->nextPart){
+    
+    for ( current = piPtr; current != NULL; 
+        current = current->nextPart){
         if (count % 8 == 0){
             printf("\t");
         }
-		printf("[+%5d] ", current->offset);
+        printf("[+%5d] ", current->offset);
         count++;
         if (count % 8 == 0){
             printf("\n");
         }
-	}
+    }
     printf("\n");
 }
 
@@ -121,10 +121,10 @@ void printHeapMetaInfo()
 {
     int i;
 
-	printf("\nHeap Meta Info:\n");
-	printf("===============\n");
-	printf("Total Size = %d bytes\n", hmi.totalSize);
-	printf("Start Address = %p\n", hmi.base);
+    printf("\nHeap Meta Info:\n");
+    printf("===============\n");
+    printf("Total Size = %d bytes\n", hmi.totalSize);
+    printf("Start Address = %p\n", hmi.base);
 
     for (i = hmi.maxIdx; i >=0; i--){
         printf("A[%d]: ", i);
@@ -225,19 +225,19 @@ int setupHeap(int initialSize)
  * Setup a heap with "initialSize" bytes
  *********************************************************/
 {
-	void* base;
+    void* base;
 
-	base = sbrk(0);
-	if(	sbrk(initialSize) == (void*)-1){
-		printf("Cannot set break! Behavior undefined!\n");
-		return 0;
-	}
+    base = sbrk(0);
+    if(    sbrk(initialSize) == (void*)-1){
+        printf("Cannot set break! Behavior undefined!\n");
+        return 0;
+    }
 
     hmi.base = base;
 
-	hmi.totalSize = initialSize;
+    hmi.totalSize = initialSize;
     hmi.internalFragTotal = 0;
-	
+    
     hmi.maxIdx = log2Floor(initialSize); // we can assume initial size is power of 2 (given)
     hmi.A = (partInfo**)malloc(sizeof(partInfo*) * (hmi.maxIdx+1));
 
@@ -302,7 +302,6 @@ void myfree(void* address, int size)
  *    Attempt to free a previously allocated memory space
  *********************************************************/
 {
-	printf("sanity");
     //TODO: Task 3. Implement the de allocation using buddy allocator
     int actualSize = size;
     int addr = address - hmi.base;
@@ -311,33 +310,27 @@ void myfree(void* address, int size)
     size = powOf2(level);
 
     
-	partInfo *current = hmi.A[level];
+    partInfo *current = hmi.A[level];
     partInfo *prev = NULL;
-    printf("going to loop");
-	while ( current != NULL ){
-	printf("offset %d",current->offset);
-	printf("buddyaddr is %d",buddyAddr);
-		if (current->offset == buddyAddr) {
-            printf("buddyaddr");
-	    printf("%d", current->offset);
-			if (prev == NULL) {
+    while ( current != NULL ){
+        if (current->offset == buddyAddr) {
+            if (prev == NULL) {
                 hmi.A[level] = current->nextPart;
             } else {
                 prev->nextPart = current->nextPart;
             }
-			printf("%d",min(addr,buddyAddr));
             return myfree(min(addr, buddyAddr) + hmi.base, size*2);            
-		} 
+        } 
         prev = current;
-		current = current->nextPart;
-	}
+        current = current->nextPart;
+    }
 
     // buddy not found, just add the freed partition back.
     partInfo *newPart = buildPartitionInfo(addr);
-	current = hmi.A[level];
+    current = hmi.A[level];
     prev = NULL;
-	while ( current != NULL ){
-		if (current->offset > addr) {
+    while ( current != NULL ){
+        if (current->offset > addr) {
             if (prev == NULL) {
                 hmi.A[level] = newPart;
                 newPart->nextPart = current;
@@ -347,13 +340,13 @@ void myfree(void* address, int size)
             }
             hmi.internalFragTotal -= size - actualSize;
             return;
-		} 
+        } 
         prev = current;
-		current = current->nextPart;
-	}
+        current = current->nextPart;
+    }
     if (prev==NULL)
-	    hmi.A[level] = newPart;
+        hmi.A[level] = newPart;
     else
-	    prev->nextPart = newPart;
+        prev->nextPart = newPart;
     hmi.internalFragTotal -= powOf2(log2Ceiling(actualSize)) - actualSize;
 }
