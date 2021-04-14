@@ -22,6 +22,7 @@ for the 2nd member if  you are on a team
 static heapMetaInfo hmi;
 
 static sem_t mutex;
+static sem_t lock;
 static int concurrentMemOp = 0;
 
 int memOpIntegrity = 1;
@@ -131,6 +132,7 @@ int setupHeap(int initialSize)
 	
     //Setup Mutex for internal checking
     sem_init( &mutex, 0, 1 );
+    sem_init( &lock, 0, 1 );
 	return 1;
 }
 
@@ -195,7 +197,7 @@ void* mymalloc(int size)
  *    Return NULL otherwise 
  *********************************************************/
 {
-
+    sem_wait( &lock );
     //Checking for race condition
     memOpStart();
 
@@ -237,7 +239,9 @@ void* mymalloc(int size)
     //Check for race condition
     memOpEnd();
 
+    sem_post( &lock );
 	return hmi.base + current->offset;
+
 }
 
 void myfree(void* address)
@@ -246,6 +250,7 @@ void myfree(void* address)
  *    Attempt to free a previously allocated memory space
  *********************************************************/
 {
+    sem_wait( &lock );
 	partInfo *toBeFreed;
     int partID;
 
@@ -275,4 +280,5 @@ void myfree(void* address)
 
     //Check for race condition
     memOpEnd();
+    sem_post( &lock );
 }
