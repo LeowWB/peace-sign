@@ -350,7 +350,7 @@ void myfree(void* address, int size)
             } else {
                 prev->nextPart = current->nextPart;
             }
-            return myfree(min(addr, buddyAddr) + hmi.base, size*2);
+            return myfree(min(addr, buddyAddr) + hmi.base, size+actualSize);
         }
         prev = current;
         current = current->nextPart;
