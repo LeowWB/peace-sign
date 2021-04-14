@@ -265,17 +265,6 @@ int setupHeap(int initialSize, int minPartSize, int maxPartSize)
         initialSize -= actualSize;
         offset += actualSize;
     }
-    current = NULL;
-    for (; initialSize >= minPartSize; initialSize -= minPartSize) {
-        if (current == NULL) {
-            hmi.A[hmi.minIdx] = current = buildPartitionInfo(offset);
-        } else {
-            current->nextPart = buildPartitionInfo(offset);
-            current = current->nextPart;
-        }
-        offset += minPartSize;
-    }
-
 
     //TODO: Task 1. Setup the rest of the bookkeeping info:
     //       hmi.A <= an array of partition linked list
@@ -326,7 +315,9 @@ void* mymalloc(int wantedSize)
         level--;
         sizeOfBlock = powOf2(level);
         partInfo *blockToPutBack = buildPartitionInfo(blockToTake->offset + sizeOfBlock);
-        blockToPutBack->nextPart = blockToTake->nextPart;
+        if (hmi.A[level] != NULL) {
+            blockToPutBack->nextPart = hmi.A[level]->nextPart;
+        }
         hmi.A[level] = blockToPutBack;
     }
 
@@ -389,5 +380,5 @@ void myfree(void* address, int size)
         hmi.A[level] = newPart;
     else
         prev->nextPart = newPart;
-    hmi.internalFragTotal -= powOf2(log2Ceiling(actualSize)) - actualSize;
+    hmi.internalFragTotal -= size - actualSize;
 }
