@@ -303,7 +303,6 @@ void* mymalloc(int wantedSize)
     if (level > hmi.maxIdx) {
         return NULL;
     }
-    printf("%d", level);
     //level now contains the level from which we'll take a block.
 
     partInfo *blockToTake = hmi.A[level];
