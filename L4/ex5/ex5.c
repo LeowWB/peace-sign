@@ -197,9 +197,11 @@ void* mymalloc(int size)
  *    Return NULL otherwise 
  *********************************************************/
 {
-    sem_wait( &lock );
+
     //Checking for race condition
+    sem_wait(&lock);
     memOpStart();
+
 
     partInfo *current = hmi.pListHead;
 
@@ -225,6 +227,7 @@ void* mymalloc(int size)
     if (current == NULL){	//heap full
         //Check for race condition
         memOpEnd();
+        sem_post(&lock);
 	    return NULL;
 	}
 
@@ -237,9 +240,12 @@ void* mymalloc(int size)
 	current->status = OCCUPIED;
 
     //Check for race condition
-    memOpEnd();
 
-    sem_post( &lock );
+
+
+    memOpEnd();
+    sem_post(&lock);
+
 	return hmi.base + current->offset;
 
 }
@@ -250,7 +256,7 @@ void myfree(void* address)
  *    Attempt to free a previously allocated memory space
  *********************************************************/
 {
-    sem_wait( &lock );
+    sem_wait(&lock);
 	partInfo *toBeFreed;
     int partID;
 
@@ -280,5 +286,5 @@ void myfree(void* address)
 
     //Check for race condition
     memOpEnd();
-    sem_post( &lock );
+    sem_post(&lock);
 }
