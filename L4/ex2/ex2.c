@@ -1,13 +1,15 @@
 /*************************************
- * Lab 4 Exercise 2
- * Name:
- * Student Id: A????????
- * Lab Group: B??
- *************************************
-Note: Duplicate the above and fill in 
-for the 2nd member if  you are on a team
-*/
-
+* Lab 2 Exercise 1
+* Name: Daryl Tan
+* Student Id: A0132821R
+* Lab Group: B17
+*************************************
+*************************************
+* Lab 2 Exercise 1
+* Name: Leow Wen Bin
+* Student Id: A0184415E
+* Lab Group: B13
+*************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
