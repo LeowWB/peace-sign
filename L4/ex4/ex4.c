@@ -1,11 +1,11 @@
 /*************************************
-* Lab 2 Exercise 1
+* Lab 4 Exercise 4
 * Name: Daryl Tan
 * Student Id: A0132821R
 * Lab Group: B17
 *************************************
 *************************************
-* Lab 2 Exercise 1
+* Lab 4 Exercise 4
 * Name: Leow Wen Bin
 * Student Id: A0184415E
 * Lab Group: B13
